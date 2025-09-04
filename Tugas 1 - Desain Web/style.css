@@ -1,0 +1,131 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f2f2f2;
+  color: #111;
+}
+
+.cv {
+  max-width: 860px;
+  margin: 16px auto;
+  background: #fff;
+  padding: 16px;
+  border: 1px solid #ddd;
+}
+
+.header {
+  text-align: center;
+  padding: 16px;
+  background: #1e40af;
+  color: #fff;
+}
+
+.header img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+}
+
+h1 {
+  margin: 8px 0 4px;
+  font-size: 26px;
+}
+
+.role {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+.btn-print {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 0;
+  background: #fff;
+  color: #1e40af;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+h2 {
+  margin-top: 20px;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #334155;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.section {
+  margin-top: 12px;
+}
+
+ul {
+  margin: 6px 0 0 18px;
+}
+
+.meta {
+  color: #475569;
+  font-size: 13px;
+  margin: 4px 0 6px;
+}
+
+.two-col {
+  display: block;
+}
+
+.col {
+  margin-bottom: 16px;
+}
+
+.contact-list,
+.plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.contact-list li {
+  margin: 6px 0;
+}
+
+.skill {
+  margin: 6px 0;
+}
+
+.bar {
+  height: 8px;
+  background: #e5e7eb;
+}
+
+.fill {
+  height: 8px;
+  background: #1e40af;
+  width: 60%;
+}
+
+.footer {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  color: #64748b;
+  font-size: 13px;
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .cv {
+    border: 0;
+  }
+  .btn-print {
+    display: none;
+  }
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+}
