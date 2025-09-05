@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tugas Frame</title>
+</head>
+<!-- Bagi layout: header, navigation, body utama, footer -->
+<frameset rows="150px,50px,*,80px" border="1">
+  <!-- Header -->
+  <frame src="header.html" name="header" noresize scrolling="no">
+
+  <!-- Navigation -->
+  <frame src="nav.html" name="nav" noresize scrolling="no">
+
+  <!-- Body utama: left, main, right -->
+  <frameset cols="20%,60%,20%" border="1">
+    <frame src="left.html" name="left" noresize>
+    <frame src="home.html" name="main">
+    <frame src="right.html" name="right" noresize>
+  </frameset>
+
+  <!-- Footer -->
+  <frame src="footer.html" name="footer" noresize scrolling="no">
+</frameset>
+</html>
