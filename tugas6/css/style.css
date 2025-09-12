@@ -10,17 +10,14 @@
 * {
   box-sizing: border-box;
 }
-html,
-body {
-  height: 100%;
+html {
+  scroll-behavior: smooth;
 }
 body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
 }
-
-/* Links */
 a {
   color: var(--accent);
   text-decoration: none;
@@ -37,10 +34,10 @@ a:hover {
 .navbar .nav-link {
   color: var(--text);
 }
-.navbar .nav-link.active,
 .navbar .nav-link:focus {
   font-weight: 600;
 }
+
 .footer {
   background: #fff;
   border-top: 1px solid var(--border);
@@ -59,10 +56,29 @@ a:hover {
 }
 
 /* Tables */
-.table thead th {
-  background: #f1f5f9;
-  color: var(--text);
-}
 .table {
   border-color: var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table thead th {
+  background: #e2e8f0;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.table tbody tr:hover {
+  background-color: #f1f5ff;
+}
+
+/* Main Content */
+.main-frame {
+  display: block;
+  border: 0;
+  min-height: 70vh;
+  /* min-height: 900px; */
 }
