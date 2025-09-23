@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tugas 3 - Javascript</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Manajemen Produk Toko</h1>
+
+    <div class="grid">
+      <!-- Card Daftar Produk -->
+      <div class="card">
+        <h3 style="margin-top:0">Daftar Produk</h3>
+        <table aria-label="Tabel Produk">
+          <thead>
+            <tr>
+              <th>ID</th><th>Nama</th><th class="mono">Harga</th><th>Stok</th><th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-produk"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" id="summary" class="muted">—</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Card Tambah Produk -->
+      <div class="card">
+        <h3 style="margin-top:0">Tambah Produk</h3>
+        <label for="nama">Nama</label>
+        <input id="nama" placeholder="Contoh: Flashdisk" />
+
+        <label for="harga">Harga (Rp)</label>
+        <input id="harga" type="number" min="0" placeholder="Contoh: 120000" />
+
+        <label for="stok">Stok</label>
+        <input id="stok" type="number" min="0" placeholder="Contoh: 12" />
+
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn primary" id="btnTambah">Tambah</button>
+          <button class="btn" id="btnReset">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n ?? 0);
+
+    let produkToko = [
+      { id: 1, nama: "Laptop",   harga: 7000000, stok: 5 },
+      { id: 2, nama: "Mouse",    harga: 200000,  stok: 10 },
+      { id: 3, nama: "Keyboard", harga: 350000,  stok: 7 },
+    ];
+
+    function tambahProduk(nama, harga, stok) {
+      const nextId = produkToko.length ? Math.max(...produkToko.map(p => p.id)) + 1 : 1;
+      produkToko.push({ id: nextId, nama: String(nama).trim(), harga: Number(harga), stok: Number(stok) });
+      tampilkanProduk();
+    }
+
+    function hapusProduk(id) {
+      produkToko = produkToko.filter(p => p.id !== id);
+      tampilkanProduk();
+    }
+
+    function tampilkanProduk() {
+      const tbody = document.getElementById('tbody-produk');
+      tbody.innerHTML = produkToko.map(p => `
+        <tr>
+          <td>${p.id}</td>
+          <td>${escapeHtml(p.nama)}</td>
+          <td class="mono">${rupiah(p.harga)}</td>
+          <td>${p.stok}</td>
+          <td><button class="btn" onclick="hapusProduk(${p.id})">Hapus</button></td>
+        </tr>
+      `).join('');
+
+      const totalItem = produkToko.length;
+      const totalNilai = produkToko.reduce((s, p) => s + p.harga * p.stok, 0);
+      document.getElementById('summary').textContent = `Total produk: ${totalItem} • Nilai persediaan: ${rupiah(totalNilai)}`;
+    }
+
+    function escapeHtml(s) {
+      const m={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
+      return String(s??'').replace(/[&<>"']/g,x=>m[x]);
+    }
+
+    document.getElementById('btnTambah').addEventListener('click', () => {
+      const nama = document.getElementById('nama').value;
+      const harga = Number(document.getElementById('harga').value);
+      const stok = Number(document.getElementById('stok').value);
+
+      if (!nama.trim()) return alert('Nama tidak boleh kosong.');
+      if (!(harga > 0)) return alert('Harga harus lebih dari 0.');
+      if (!(stok >= 0)) return alert('Stok harus 0 atau lebih.');
+
+      tambahProduk(nama, harga, stok);
+      document.getElementById('nama').value = '';
+      document.getElementById('harga').value = '';
+      document.getElementById('stok').value = '';
+      document.getElementById('nama').focus();
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      document.getElementById('nama').value = '';
+      document.getElementById('harga').value = '';
+      document.getElementById('stok').value = '';
+    });
+
+    tampilkanProduk();
+  </script>
+</body>
+</html>
