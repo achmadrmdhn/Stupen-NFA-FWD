@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tugas 5 — Javascript</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Manajemen Produk Toko</h1>
+
+    <div class="toolbar card">
+      <div class="left">
+        <input id="search" class="input" placeholder="Cari produk..." />
+      </div>
+      <div class="right">
+        <button class="btn danger" id="btnHapusTerpilih">Hapus Terpilih</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Daftar Produk -->
+      <div class="card">
+        <div class="header">
+          <h3>Daftar Produk</h3>
+          <div id="summary" class="muted">—</div>
+        </div>
+
+        <table aria-label="Tabel Produk">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="checkAll" /></th>
+              <th>ID</th>
+              <th>Nama</th>
+              <th class="mono">Harga</th>
+              <th>Stok</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-produk"></tbody>
+        </table>
+      </div>
+
+      <!-- Tambah Produk -->
+      <div class="card">
+        <h3>Tambah Produk</h3>
+        <label for="nama">Nama</label>
+        <input id="nama" class="input" placeholder="Contoh: Flashdisk 64GB" />
+
+        <label for="harga">Harga (Rp)</label>
+        <input id="harga" class="input" type="number" min="0" placeholder="Contoh: 120000" />
+
+        <label for="stok">Stok</label>
+        <input id="stok" class="input" type="number" min="0" placeholder="Contoh: 12" />
+
+        <div class="row">
+          <button class="btn primary" id="btnTambah">Tambah</button>
+          <button class="btn" id="btnReset">Reset</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Util
+    const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n ?? 0);
+    const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    const toast = (msg) => {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(()=>el.classList.remove('show'), 1600);
+    };
+
+    // Data awal (≥5)
+    let produkList = [
+      { id: 1, nama: "Laptop Pro 14",  harga: 13500000, stok: 6 },
+      { id: 2, nama: "Mouse Wireless", harga: 180000,   stok: 25 },
+      { id: 3, nama: "Keyboard TKL",   harga: 420000,   stok: 14 },
+      { id: 4, nama: "Monitor 24\"",   harga: 2100000,  stok: 9 },
+      { id: 5, nama: "Headset Mic",    harga: 390000,   stok: 30 },
+      { id: 6, nama: "USB Hub 4-Port", harga: 130000,   stok: 20 }
+    ];
+
+    // Spread Operator
+    function tambahProduk(nama, harga, stok = 0) {
+      const nextId = produkList.length ? Math.max(...produkList.map(p => p.id)) + 1 : 1;
+      const base = { nama: String(nama).trim(), harga: Number(harga), stok: Number(stok) };
+      const produkBaru = { id: nextId, ...base };
+      produkList = [...produkList, produkBaru];
+      tampilkanProduk();
+      toast('Produk ditambahkan');
+    }
+
+    // Rest Parameter
+    function hapusProduk(...ids) {
+      const setIds = new Set(ids.map(Number));
+      const before = produkList.length;
+      produkList = produkList.filter(p => !setIds.has(p.id));
+      tampilkanProduk();
+      return before - produkList.length;
+    }
+
+    // Destructuring
+    function tampilkanProduk(filterText = "") {
+      const tbody = document.getElementById('tbody-produk');
+      const q = filterText.trim().toLowerCase();
+
+      const listTampil = q
+        ? produkList.filter(({nama}) => nama.toLowerCase().includes(q))
+        : produkList;
+
+      tbody.innerHTML = listTampil.map(({id, nama, harga, stok}) => `
+        <tr data-id="${id}">
+          <td><input type="checkbox" class="row-check" data-id="${id}"/></td>
+          <td>${id}</td>
+          <td>${escapeHtml(nama)}</td>
+          <td class="mono">${rupiah(harga)}</td>
+          <td>${stok}</td>
+          <td><button class="btn danger sm" data-action="hapus" data-id="${id}">Hapus</button></td>
+        </tr>
+      `).join('');
+
+      const totalItem = listTampil.length;
+      const totalNilai = listTampil.reduce((s, {harga, stok}) => s + harga * stok, 0);
+      document.getElementById('summary').textContent =
+        `Total produk tampil: ${totalItem} • Nilai persediaan: ${rupiah(totalNilai)}`;
+
+      // reset header checkbox
+      document.getElementById('checkAll').checked = false;
+    }
+
+    // Event Listener
+    document.getElementById('btnTambah').addEventListener('click', () => {
+      const nama  = document.getElementById('nama').value;
+      const harga = Number(document.getElementById('harga').value);
+      const stok  = Number(document.getElementById('stok').value);
+
+      if (!nama.trim()) return toast('Nama kosong');
+      if (!(harga > 0)) return toast('Harga harus > 0');
+      if (!(stok >= 0)) return toast('Stok minimal 0');
+
+      tambahProduk(nama, harga, stok);
+      document.getElementById('nama').value = '';
+      document.getElementById('harga').value = '';
+      document.getElementById('stok').value = '';
+      document.getElementById('nama').focus();
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      document.getElementById('nama').value = '';
+      document.getElementById('harga').value = '';
+      document.getElementById('stok').value = '';
+    });
+
+    // Delegasi klik
+    document.getElementById('tbody-produk').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action="hapus"]');
+      if (!btn) return;
+      const id = Number(btn.dataset.id);
+      const prod = produkList.find(p => p.id === id);
+      const nama = prod ? prod.nama : `ID ${id}`;
+      if (confirm(`Yakin ingin menghapus produk "${nama}"?`)) {
+        const removed = hapusProduk(id);
+        if (removed > 0) toast(`Produk "${nama}" dihapus`);
+      }
+    });
+
+    // Header checkbox
+    document.getElementById('checkAll').addEventListener('change', (e) => {
+      const rows = document.querySelectorAll('.row-check');
+      rows.forEach(cb => cb.checked = e.target.checked);
+    });
+
+    // Hapus terpilih
+    document.getElementById('btnHapusTerpilih').addEventListener('click', () => {
+      const ids = [...document.querySelectorAll('.row-check:checked')].map(cb => Number(cb.dataset.id));
+      if (ids.length === 0) return toast('Belum ada yang dipilih');
+
+      const names = produkList.filter(p => ids.includes(p.id)).map(p => p.nama).join(', ');
+      if (confirm(`Yakin ingin menghapus produk terpilih?\n(${names})`)) {
+        const removed = hapusProduk(...ids);
+        if (removed > 0) toast(`Terhapus ${removed} item`);
+      }
+    });
+
+    // Pencarian produk
+    document.getElementById('search').addEventListener('input', (e) => {
+      tampilkanProduk(e.target.value);
+    });
+
+    // Render awal
+    tampilkanProduk();
+  </script>
+</body>
+</html>
