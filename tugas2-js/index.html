@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tugas 2 - Javascript</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Cetak Data Pegawai — Perhitungan Gaji</h1>
+
+    <div class="card">
+      <div class="toolbar">
+        <div class="left">
+          <span class="badge">Tugas 2 — JavaScript</span>
+        </div>
+      </div>
+
+      <table aria-label="Tabel Gaji Pegawai">
+        <thead>
+          <tr>
+            <th>Nama Pegawai</th>
+            <th>Umur</th>
+            <th>Jabatan</th>
+            <th>Status</th>
+            <th class="mono">Gaji Pokok</th>
+            <th class="mono">Tunjangan Jabatan</th>
+            <th class="mono">BPJS</th>
+            <th class="mono">Tunjangan Keluarga</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7">Total Gaji</td>
+            <td class="mono" id="totalCell">Rp 0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const rupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 });
+
+    // Data
+    const pegawai = { nama: "Dodi Prayodi", umur: 25, jabatan: "Manajer", status: "Menikah" };
+
+    // Pilih gaji pokok berdasarkan jabatan
+    function hitungGajiPokok(jabatan) {
+      const j = jabatan.trim().toLowerCase();
+      if (j === "manajer") return 15_000_000;
+      else if (j === "asisten manajer" || j === "asisten") return 10_000_000;
+      else if (j === "staff" || j === "staf") return 5_000_000;
+      return 0;
+    }
+
+    function hitungTunjanganJabatan(gapok) { return 0.15 * gapok; }
+    function hitungBPJS(gapok) { return 0.10 * gapok; }
+    function hitungTunjanganKeluarga(status, gapok) {
+      return status.trim().toLowerCase() === "menikah" ? 0.20 * gapok : 0;
+    }
+
+    function titleCase(s) { return s.replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase()); }
+    function escapeHtml(s) { const m = { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }; return String(s).replace(/[&<>"']/g, x => m[x]); }
+
+    function renderTabel(p) {
+      const gapok = hitungGajiPokok(p.jabatan);
+      const tJab  = hitungTunjanganJabatan(gapok);
+      const bpjs  = hitungBPJS(gapok);
+      const tKel  = hitungTunjanganKeluarga(p.status, gapok);
+      const total = gapok + tJab + bpjs + tKel;
+
+      document.getElementById("tbody").innerHTML = `
+        <tr>
+          <td>${escapeHtml(titleCase(p.nama))}</td>
+          <td>${p.umur}</td>
+          <td>${escapeHtml(titleCase(p.jabatan))}</td>
+          <td>${escapeHtml(titleCase(p.status))}</td>
+          <td class="mono">${rupiah.format(gapok)}</td>
+          <td class="mono">${rupiah.format(tJab)}</td>
+          <td class="mono">${rupiah.format(bpjs)}</td>
+          <td class="mono">${rupiah.format(tKel)}</td>
+        </tr>
+      `;
+      document.getElementById("totalCell").textContent = rupiah.format(total);
+    }
+
+    function init() {
+      renderTabel(pegawai);
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
