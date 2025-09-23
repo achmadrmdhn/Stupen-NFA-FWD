@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tugas 4 - Javascript</title>
+  <link rel="stylesheet" href="style.css">
+<body>
+  <div class="card">
+    <h1>Sistem Manajemen Transportasi</h1>
+    <p>Untuk melihat hasil output sistem,<br> silakan buka <strong>Console</strong> dengan menekan <code>F12</code>.</p>
+  </div>
+
+  <script>
+    // Abstraksi Kendaraan
+    class Kendaraan {
+      constructor(plat, merk, tipe) {
+        this.plat = plat;
+        this.merk = merk;
+        this.tipe = tipe;
+        this.disewa = false;
+      }
+      info() {
+        return `${this.tipe} ${this.merk} (${this.plat})`;
+      }
+    }
+
+    class Mobil extends Kendaraan {
+      constructor(plat, merk, kursi = 5) {
+        super(plat, merk, "Mobil");
+        this.kursi = kursi;
+      }
+    }
+
+    class Motor extends Kendaraan {
+      constructor(plat, merk, cc = 150) {
+        super(plat, merk, "Motor");
+        this.cc = cc;
+      }
+    }
+
+    class Bus extends Kendaraan {
+      constructor(plat, merk, kapasitas = 30) {
+        super(plat, merk, "Bus");
+        this.kapasitas = kapasitas;
+      }
+    }
+
+    // Pelanggan
+    class Pelanggan {
+      constructor(nama, nomorTelepon) {
+        this.nama = nama;
+        this.nomorTelepon = nomorTelepon;
+        this.kendaraanDisewa = null;
+      }
+
+      sewa(kendaraan) {
+        if (this.kendaraanDisewa) {
+          throw new Error(`${this.nama} sudah menyewa ${this.kendaraanDisewa.info()}.`);
+        }
+        if (kendaraan.disewa) {
+          throw new Error(`${kendaraan.info()} sudah disewa pelanggan lain.`);
+        }
+        kendaraan.disewa = true;
+        this.kendaraanDisewa = kendaraan;
+        return `${this.nama} berhasil menyewa ${kendaraan.info()}`;
+      }
+    }
+
+    // Sistem
+    class SistemTransportasi {
+      constructor() {
+        this.daftarKendaraan = [];
+        this.daftarPelanggan = [];
+      }
+
+      tambahKendaraan(k) {
+        this.daftarKendaraan.push(k);
+      }
+
+      tambahPelanggan(p) {
+        this.daftarPelanggan.push(p);
+      }
+
+      catatSewa({ nama, plat }) {
+        const pelanggan = this.daftarPelanggan.find(p => p.nama === nama);
+        const kendaraan = this.daftarKendaraan.find(k => k.plat === plat);
+        return pelanggan.sewa(kendaraan);
+      }
+
+      daftarPenyewaAktif() {
+        return this.daftarPelanggan
+          .filter(p => p.kendaraanDisewa)
+          .map(p => `${p.nama} (${p.nomorTelepon}) — ${p.kendaraanDisewa.info()}`);
+      }
+
+      cetakPenyewaAktif() {
+        const aktif = this.daftarPenyewaAktif();
+        if (aktif.length === 0) {
+          console.log("Tidak ada pelanggan yang sedang menyewa.");
+        } else {
+          console.log("=== Daftar Pelanggan yang Sedang Menyewa ===");
+          aktif.forEach((p, i) => console.log(`${i + 1}. ${p}`));
+        }
+      }
+    }
+
+    // Demo
+    const sistem = new SistemTransportasi();
+
+    sistem.tambahKendaraan(new Mobil("B 1234 CD", "Toyota Avanza", 7));
+    sistem.tambahKendaraan(new Motor("F 5678 GH", "Honda Vario", 150));
+    sistem.tambahKendaraan(new Bus("D 9012 JK", "Hino", 40));
+
+    sistem.tambahPelanggan(new Pelanggan("Rifai", "0812-0000-1111"));
+    sistem.tambahPelanggan(new Pelanggan("Dina", "0812-0000-2222"));
+
+    try {
+      console.log(sistem.catatSewa({ nama: "Rifai", plat: "B 1234 CD" }));
+      console.log(sistem.catatSewa({ nama: "Dina", plat: "F 5678 GH" }));
+    } catch (e) {
+      console.error(e.message);
+    }
+
+    sistem.cetakPenyewaAktif();
+  </script>
+</body>
+</html>
