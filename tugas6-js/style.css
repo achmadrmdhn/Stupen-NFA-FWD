@@ -1,0 +1,118 @@
+:root {
+  --bg1: #e8f0ff;
+  --bg2: #f7faff;
+  --ink: #111827;
+  --muted: #6b7280;
+  --acc: #5563de;
+  --border: #e5e7eb;
+  --thead: #f3f4f6;
+  --danger: #e11d48;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  color: var(--ink);
+  font: 15px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin: 0 0 18px;
+  font-weight: 800;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn.primary {
+  background: var(--acc);
+  color: #fff;
+  border: none;
+}
+
+.btn.danger {
+  background: #fff;
+  color: var(--danger);
+  border: 1px solid #fecdd3;
+}
+
+.btn.danger.sm {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  margin-top: 10px;
+}
+
+thead {
+  background: var(--thead);
+}
+
+th, td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}

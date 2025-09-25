@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tugas 6 - Javascript</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Manajemen Data Mahasiswa</h1>
+
+    <div class="grid">
+      <!-- Daftar Data -->
+      <div class="card">
+        <div class="header">
+          <h3>Daftar Data</h3>
+          <div id="summary" class="muted">—</div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Umur</th>
+              <th>Alamat</th>
+              <th>Email</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-data"></tbody>
+        </table>
+      </div>
+
+      <!-- Tambah Data -->
+      <div class="card">
+        <h3>Tambah Data</h3>
+        <label>Nama</label>
+        <input id="nama" class="input" placeholder="Masukkan Nama Lengkap" />
+
+        <label>Umur</label>
+        <input id="umur" class="input" type="number" placeholder="Masukkan Umur" />
+
+        <label>Alamat</label>
+        <input id="alamat" class="input" placeholder="Masukkan Alamat" />
+
+        <label>Email</label>
+        <input id="email" class="input" type="email" placeholder="Masukkan Email Aktif" />
+
+        <div class="row">
+          <button class="btn primary" id="btnTambah">Tambah</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="controller.js"></script>
+</body>
+</html>
